@@ -1,15 +1,35 @@
 // AccountManagement.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include <list>
 #include <iostream>
+#include <string>
+#include <iterator>
+#include <algorithm>
+
 #include "Account.h"
 #include "PersonalAccount.h"
 #include "EnterpriseAccount.h"
+#include "AccountId.h"
 
 using namespace std;
 
-PersonalAccount* m_personalAccount = nullptr;
-EnterpriseAccount* m_enterpriseAccount = nullptr;
+std::list<Account*> m_accountList;
+int m_id = 0;
+
+std::string GetAccountDetails(AccountId id)
+{
+	for (std::list<Account*>::iterator it = m_accountList.begin(); it != m_accountList.end(); ++it)
+	{
+		AccountId currentId = (*it)->GetId();
+		if (currentId == id)
+		{
+			return (*it)->GetDetails();
+		}
+	}
+
+	return "Account not found!";
+}
 
 void ManagePersonalMenu()
 {
@@ -20,30 +40,57 @@ void ManagePersonalMenu()
 		cout << endl << "      Personel Account Menu   " << endl;
 		cout << endl << "----------------------------" << endl;
 		cout << "1. Create new account" << endl;
-		cout << "2. Deposit" << endl;
-		cout << "3. Whitdraw" << endl;
-		cout << "4. Get account details" << endl;
 		cout << "0. Back" << endl;
 
 		cin >> selection;
 
-		string firstName = "", lastName = "";
-
 		switch (selection)
 		{
 		case 1:
-			
+		{
+			string firstName = "", lastName = "";
 			cout << "Firstname: ";
 			cin >> firstName;
 			cout << endl << "Lastname: ";
 			cin >> lastName;
+			m_accountList.push_back(new PersonalAccount(firstName, lastName, m_id++));
+		}
+		break;
 
-			m_personalAccount = new PersonalAccount(firstName, lastName);
-			break;
+		case 0:
+			return;
 
-		case 4:
-			cout << m_personalAccount->GetDetails() << endl;
+		default:
 			break;
+		}
+	}
+}
+
+void ManageEnterpriseMenu()
+{
+	while (true)
+	{
+		int selection;
+
+		cout << endl << "      Enterprise Account Menu   " << endl;
+		cout << endl << "----------------------------" << endl;
+		cout << "1. Create new account" << endl;
+		cout << "0. Back" << endl;
+
+		cin >> selection;
+
+		switch (selection)
+		{
+		case 1:
+		{
+			string yTunnus = "", name = "";
+			cout << "y-tunnus: ";
+			cin >> yTunnus;
+			cout << endl << "Company name: ";
+			cin >> name;
+			m_accountList.push_back(new EnterpriseAccount(yTunnus, name, m_id++));
+		}
+		break;
 
 		case 0:
 			return;
@@ -64,6 +111,8 @@ void MainMenu()
 		cout << endl << "----------------------------" << endl;
 		cout << "1. Manage personal account" << endl;
 		cout << "2. Manage enterprise account" << endl;
+		cout << "3. List accounts" << endl;
+		cout << "4. Find account" << endl;
 		cout << "0. Exit" << endl;
 
 		cin >> selection;
@@ -73,10 +122,37 @@ void MainMenu()
 		case 1:
 			ManagePersonalMenu();
 			break;
+
+		case 2:
+			ManageEnterpriseMenu();
+			break;
+
+		case 3:
+			cout << "\nAccounts" << endl;
+			cout << "------------------------------------------------" << endl;
+			std::for_each(m_accountList.begin(), m_accountList.end(), [](Account* account)
+				{
+					cout << account->GetDetails() << endl;
+				});
+			break;
+
+		case 4:
+			{
+			int id;
+			cout << "Give account id: ";
+			cin >> id;
+			cout << GetAccountDetails(AccountId(id)) << endl;
+			}
+			break;
+
 		case 0:
-			delete m_personalAccount;
-			delete m_enterpriseAccount;
+			while (!m_accountList.empty())
+			{
+				delete m_accountList.front();
+				m_accountList.pop_front();
+			}
 			exit(0);
+
 		default:
 			break;
 		}
@@ -87,16 +163,3 @@ int main()
 {
 	MainMenu();
 }
-
-
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

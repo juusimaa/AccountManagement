@@ -9,8 +9,9 @@ class PersonalAccount :
 	std::string m_lastName;
 
 public:
-	PersonalAccount(std::string firstName, std::string lastName);
+	PersonalAccount(std::string firstName, std::string lastName, int id);
 	std::string GetDetails();
+	AccountId GetId();
 	double GetBalance();
 };
 

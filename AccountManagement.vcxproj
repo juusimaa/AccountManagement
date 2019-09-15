@@ -152,12 +152,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Account.cpp" />
+    <ClCompile Include="AccountId.cpp" />
     <ClCompile Include="AccountManagement.cpp" />
     <ClCompile Include="EnterpriseAccount.cpp" />
     <ClCompile Include="PersonalAccount.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Account.h" />
+    <ClInclude Include="AccountId.h" />
     <ClInclude Include="EnterpriseAccount.h" />
     <ClInclude Include="PersonalAccount.h" />
   </ItemGroup>

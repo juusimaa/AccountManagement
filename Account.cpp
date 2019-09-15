@@ -1,5 +1,9 @@
 #include "Account.h"
 
+Account::Account()
+{
+}
+
 void Account::Deposit(double amount)
 {
 	if (amount > 0)
