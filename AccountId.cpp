@@ -2,6 +2,7 @@
 
 AccountId::AccountId()
 {
+	m_id = 0;
 }
 
 AccountId::AccountId(int id)
