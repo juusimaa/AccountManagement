@@ -14,8 +14,13 @@ void Account::Deposit(double amount)
 
 void Account::Withdraw(double amount)
 {
-	if (amount > 0)
+	if (amount > 0 && amount <= m_balance)
 	{
 		m_balance -= amount;
+	}
+
+	if (amount > m_balance)
+	{
+		m_balance = 0.0;
 	}
 }
